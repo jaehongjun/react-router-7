@@ -5,12 +5,21 @@ import { JobCard } from '~/features/jobs/components/job-card'
 import { ProductCard } from '~/features/products/components/product-card'
 import { TeamCard } from '~/features/teams/components/team-card'
 import { Button } from '../components/ui/button'
+import type { Route } from './+types/home-page'
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'Home' }, { name: 'description', content: 'Welcome to our app' }]
+  return [{ title: 'Home | Product Hunt' }];
+};
+
+export function loader({ }: Route.LoaderArgs) {
+  return {};
 }
 
-export default function HomePage() {
+export function action({ }: Route.ActionArgs) {
+  return {};
+}
+
+export default function HomePage({ loaderData, actionData }: Route.ComponentProps) {
   return (
     <div className='px-20 space-y-40'>
       <div className='grid grid-cols-3 gap-4'>
