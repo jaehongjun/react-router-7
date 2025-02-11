@@ -1,8 +1,8 @@
-import { Button } from "~/common/components/ui/button";
-import type { Route } from "./+types/daily-leaderboard-page";
-import { Hero } from "~/common/components/hero";
 import { Link } from "react-router";
+import { Hero } from "~/common/components/hero";
+import { Button } from "~/common/components/ui/button";
 import { ProductCard } from "../components/product-card";
+import type { Route } from "./+types/daily-leaderboard-page";
 
 export const meta: Route.MetaFunction = () => {
     return [{ title: "Leaderboard | Product Hunt" }];
@@ -40,7 +40,7 @@ export default function LeaderboardPage({ loaderData, actionData }: Route.Compon
                     />
                 ))}
                 <Button variant='link' asChild className='text-lg self-center'>
-                    <Link to='/products/leaderboard'>Explore all products &rarr;</Link>
+                    <Link to='/products/leaderboards/daily'>Explore all products &rarr;</Link>
                 </Button>
             </div>
             <div className='grid grid-cols-3 gap-4'>
@@ -60,7 +60,7 @@ export default function LeaderboardPage({ loaderData, actionData }: Route.Compon
                     />
                 ))}
                 <Button variant='link' asChild className='text-lg self-center'>
-                    <Link to='/products/leaderboard'>Explore all products &rarr;</Link>
+                    <Link to='/products/leaderboards/weekly'>Explore all products &rarr;</Link>
                 </Button>
             </div>
             <div className='grid grid-cols-3 gap-4'>
@@ -80,7 +80,7 @@ export default function LeaderboardPage({ loaderData, actionData }: Route.Compon
                     />
                 ))}
                 <Button variant='link' asChild className='text-lg self-center'>
-                    <Link to='/products/leaderboard'>Explore all products &rarr;</Link>
+                    <Link to='/products/leaderboards/monthly'>Explore all products &rarr;</Link>
                 </Button>
             </div>
         </div>
