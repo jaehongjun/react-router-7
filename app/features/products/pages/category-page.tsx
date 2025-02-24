@@ -1,32 +1,30 @@
-import { type MetaFunction } from 'react-router'
 import { Hero } from '~/common/components/hero'
-import { CategoryCard } from '../components/category-card'
-import ProductPagination from '../components/product-pagination'
-import type { Route } from './+types/categories-page'
+import ProductPagination from '~/common/components/product-pagination'
+import { ProductCard } from '../components/product-card'
+import type { Route } from './+types/category-page'
 
-export const meta: MetaFunction = () => {
-  return [{ title: 'Categories | Product Hunt' }]
+export const meta = ({ params }: Route.MetaArgs) => {
+  return [
+    { title: `Developer Tools | ProductHunt Clone` },
+    { name: 'description', content: `Browse Developer Tools products` },
+  ]
 }
 
-export function loader({}: Route.LoaderArgs) {
-  return {}
-}
-
-export function action({}: Route.ActionArgs) {
-  return {}
-}
-
-export default function CategoriesPage({ loaderData, actionData }: Route.ComponentProps) {
+export default function CategoryPage() {
   return (
     <div className='space-y-10'>
-      <Hero title='Developer Tools' description='Browse developer tools by category' />
-      <div className='grid grid-cols-4 gap-10'>
-        {Array.from({ length: 10 }).map((_, index) => (
-          <CategoryCard
-            key={index}
-            id={`categoryId-${index}`}
-            name={`Category Name ${index}`}
-            description={`Category Description ${index}`}
+      <Hero title={'Developer Tools'} subtitle={`Tools for developers to build products faster`} />
+
+      <div className='space-y-5 w-full max-w-screen-md mx-auto'>
+        {Array.from({ length: 11 }).map((_, index) => (
+          <ProductCard
+            key={`productId-${index}`}
+            id={`productId-${index}`}
+            name='Product Name'
+            description='Product Description'
+            commentsCount={12}
+            viewsCount={12}
+            votesCount={120}
           />
         ))}
       </div>

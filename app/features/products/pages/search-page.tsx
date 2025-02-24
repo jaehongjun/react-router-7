@@ -1,12 +1,17 @@
 import { Form } from 'react-router'
 import { z } from 'zod'
 import { Hero } from '~/common/components/hero'
+import ProductPagination from '~/common/components/product-pagination'
 import { Button } from '~/common/components/ui/button'
 import { Input } from '~/common/components/ui/input'
+import { ProductCard } from '../components/product-card'
 import type { Route } from './+types/search-page'
 
 export const meta: Route.MetaFunction = () => {
-  return [{ title: 'Search Products | Product Hunt' }]
+  return [
+    { title: 'Search Products | wemake' },
+    { name: 'description', content: 'Search for products' },
+  ]
 }
 
 const paramsSchema = z.object({
@@ -16,39 +21,34 @@ const paramsSchema = z.object({
 
 export function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
-
-  const { success, data: searchParamsData } = paramsSchema.safeParse(
-    Object.fromEntries(searchParams),
-  )
-
+  const { success, data: parsedData } = paramsSchema.safeParse(Object.fromEntries(url.searchParams))
   if (!success) {
-    throw new Response('Invalid search parameters', { status: 400 })
+    throw new Error('Invalid params')
   }
-
-  return { ...searchParamsData }
 }
 
-export function action({}: Route.ActionArgs) {
-  return {}
-}
-
-export default function SearchPage({ loaderData, actionData }: Route.ComponentProps) {
+export default function SearchPage({ loaderData }: Route.ComponentProps) {
   return (
-    <div>
-      <Hero title='Search Products' description='Search for products by name or description' />
-      <Form method='get' className='flex items-center gap-2'>
+    <div className='space-y-10'>
+      <Hero title='Search' subtitle='Search for products by title or description' />
+      <Form className='flex justify-center h-14 max-w-screen-sm items-center gap-2 mx-auto'>
         <Input name='query' placeholder='Search for products' className='text-lg' />
         <Button type='submit'>Search</Button>
       </Form>
-      <div className='container mx-auto py-6'>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-          <div className='bg-white p-4 rounded-lg shadow-md'>
-            <h2 className='text-lg font-bold'>Product 1</h2>
-            <p className='text-gray-600'>Description of Product 1</p>
-          </div>
-        </div>
+      <div className='space-y-5 w-full max-w-screen-md mx-auto'>
+        {Array.from({ length: 11 }).map((_, index) => (
+          <ProductCard
+            key={`productId-${index}`}
+            id={`productId-${index}`}
+            name='Product Name'
+            description='Product Description'
+            commentsCount={12}
+            viewsCount={12}
+            votesCount={120}
+          />
+        ))}
       </div>
+      <ProductPagination totalPages={10} />
     </div>
   )
 }

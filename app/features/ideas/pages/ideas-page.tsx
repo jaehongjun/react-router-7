@@ -1,22 +1,31 @@
-import type { Route } from "~/types/routes";
-import type { MetaFunction } from "@remix-run/react";
+import { Hero } from '~/common/components/hero'
+import { IdeaCard } from '../components/idea-card'
+import type { Route } from './+types/ideas-page'
 
-export const meta: MetaFunction = () => {
-    return [{ title: "Ideas | Product Hunt" }];
-};
-
-export function loader({ }: Route.LoaderArgs) {
-    return {};
+export const meta: Route.MetaFunction = () => {
+  return [
+    { title: 'IdeasGPT | wemake' },
+    { name: 'description', content: 'Find ideas for your next project' },
+  ]
 }
 
-export function action({ }: Route.ActionArgs) {
-    return {};
+export default function IdeasPage() {
+  return (
+    <div className='space-y-20'>
+      <Hero title='IdeasGPT' subtitle='Find ideas for your next project' />
+      <div className='grid grid-cols-4 gap-4'>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <IdeaCard
+            key={`ideaId-${index}`}
+            id={`ideaId-${index}`}
+            title='A startup that creates an AI-powered generated personal trainer, delivering customized fitness recommendations and tracking of progress using a mobile app to track workouts and progress as well as a website to manage the business.'
+            viewsCount={123}
+            postedAt='12 hours ago'
+            likesCount={12}
+            claimed={index % 2 === 0}
+          />
+        ))}
+      </div>
+    </div>
+  )
 }
-
-export function IdeasPage({ loaderData, actionData }: Route.ComponentProps) {
-    return (
-        <div className="container mx-auto py-6">
-            <h1 className="text-3xl font-bold">Ideas</h1>
-        </div>
-    );
-} 

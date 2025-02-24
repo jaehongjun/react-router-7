@@ -1,22 +1,25 @@
-import type { Route } from "~/types/routes";
-import type { MetaFunction } from "@remix-run/react";
+import { Hero } from '~/common/components/hero'
+import { TeamCard } from '../components/team-card'
+import type { Route } from './+types/teams-page'
 
-export const meta: MetaFunction = () => {
-    return [{ title: "Teams | Product Hunt" }];
-};
+export const meta: Route.MetaFunction = () => [{ title: 'Teams | wemake' }]
 
-export function loader({ }: Route.LoaderArgs) {
-    return {};
+export default function TeamsPage() {
+  return (
+    <div className='space-y-20'>
+      <Hero title='Teams' subtitle='Find a team looking for a new member.' />
+      <div className='grid grid-cols-4 gap-4'>
+        {Array.from({ length: 8 }).map((_, index) => (
+          <TeamCard
+            key={`teamId-${index}`}
+            id={`teamId-${index}`}
+            leaderUsername='lynn'
+            leaderAvatarUrl='https://github.com/inthetiger.png'
+            positions={['React Developer', 'Backend Developer', 'Product Manager']}
+            projectDescription='a new social media platform'
+          />
+        ))}
+      </div>
+    </div>
+  )
 }
-
-export function action({ }: Route.ActionArgs) {
-    return {};
-}
-
-export function TeamsPage({ loaderData, actionData }: Route.ComponentProps) {
-    return (
-        <div className="container mx-auto py-6">
-            <h1 className="text-3xl font-bold">Teams</h1>
-        </div>
-    );
-} 

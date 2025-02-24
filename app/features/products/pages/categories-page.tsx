@@ -1,26 +1,25 @@
-import { type MetaFunction } from 'react-router'
 import { Hero } from '~/common/components/hero'
 import { CategoryCard } from '../components/category-card'
 import type { Route } from './+types/categories-page'
 
-export const meta: MetaFunction = () => {
-  return [{ title: 'Categories | Product Hunt' }]
-}
+export const meta: Route.MetaFunction = () => [
+  { title: 'Categories | ProductHunt Clone' },
+  { name: 'description', content: 'Browse products by category' },
+]
 
-export function loader({}: Route.LoaderArgs) {
-  return {}
-}
-
-export function action({}: Route.ActionArgs) {
-  return {}
-}
-
-export default function CategoriesPage({ loaderData, actionData }: Route.ComponentProps) {
+export default function CategoriesPage() {
   return (
     <div className='space-y-10'>
-      <Hero title='Categories' description='Browse products by category' />
+      <Hero title='Categories' subtitle='Browse products by category' />
       <div className='grid grid-cols-4 gap-10'>
-        <CategoryCard id='categoryId' name='Category Name' description='Category Description' />
+        {Array.from({ length: 10 }).map((_, index) => (
+          <CategoryCard
+            key={`categoryId-${index}`}
+            id={`categoryId-${index}`}
+            name='Category Name'
+            description='Category Description'
+          />
+        ))}
       </div>
     </div>
   )

@@ -1,22 +1,5 @@
-import type { Route } from "~/types/routes";
-import type { MetaFunction } from "@remix-run/react";
+import { redirect } from "react-router";
 
-export const meta: MetaFunction = () => {
-    return [{ title: "Products | Product Hunt" }];
-};
-
-export function loader({ }: Route.LoaderArgs) {
-    return {};
+export function loader() {
+  return redirect("/products/leaderboards");
 }
-
-export function action({ }: Route.ActionArgs) {
-    return {};
-}
-
-export function ProductsPage({ loaderData, actionData }: Route.ComponentProps) {
-    return (
-        <div className="container mx-auto py-6">
-            <h1 className="text-3xl font-bold">Products</h1>
-        </div>
-    );
-} 

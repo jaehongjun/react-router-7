@@ -5,40 +5,33 @@ import { JobCard } from '~/features/jobs/components/job-card'
 import { ProductCard } from '~/features/products/components/product-card'
 import { TeamCard } from '~/features/teams/components/team-card'
 import { Button } from '../components/ui/button'
-import type { Route } from './+types/home-page'
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'Home | Product Hunt' }];
-};
-
-export function loader({ }: Route.LoaderArgs) {
-  return {};
+  return [{ title: 'Home | wemake' }, { name: 'description', content: 'Welcome to wemake' }]
 }
 
-export function action({ }: Route.ActionArgs) {
-  return {};
-}
-
-export default function HomePage({ loaderData, actionData }: Route.ComponentProps) {
+export default function HomePage() {
   return (
-    <div className='px-20 space-y-40'>
+    <div className='space-y-40'>
       <div className='grid grid-cols-3 gap-4'>
         <div>
           <h2 className='text-5xl font-bold leading-tight tracking-tight'>Today's Products</h2>
-          <p className='text-xl font-light text-foreground'>The best products for your home.</p>
+          <p className='text-xl font-light text-foreground'>
+            The best products made by our community today.
+          </p>
           <Button variant='link' asChild className='text-lg p-0'>
-            <Link to='/products/leaderboard'>Explore all products &rarr;</Link>
+            <Link to='/products/leaderboards'>Explore all products &rarr;</Link>
           </Button>
         </div>
         {Array.from({ length: 11 }).map((_, index) => (
           <ProductCard
-            key={index}
-            id='productId'
+            key={`productId-${index}`}
+            id={`productId-${index}`}
             name='Product Name'
-            description='The best products for your home.'
-            commentCount={12}
-            viewCount={12}
-            upvoteCount={120}
+            description='Product Description'
+            commentsCount={12}
+            viewsCount={12}
+            votesCount={120}
           />
         ))}
       </div>
@@ -46,53 +39,47 @@ export default function HomePage({ loaderData, actionData }: Route.ComponentProp
         <div>
           <h2 className='text-5xl font-bold leading-tight tracking-tight'>Latest Discussions</h2>
           <p className='text-xl font-light text-foreground'>
-            The best products for your community.
+            The latest discussions from our community.
           </p>
           <Button variant='link' asChild className='text-lg p-0'>
-            <Link to='/products/leaderboard'>Explore all discussions &rarr;</Link>
+            <Link to='/community'>Explore all discussions &rarr;</Link>
           </Button>
         </div>
         {Array.from({ length: 11 }).map((_, index) => (
           <PostCard
-            key={index}
-            id='postId'
-            title='Discussion Title'
-            author='Hong'
-            productName='Product Name'
-            authorAvatarUrl='https://github.com/shadcn.png'
-            createdAt='12 hours ago'
+            key={`postId-${index}`}
+            id={`postId-${index}`}
+            title='What is the best productivity tool?'
+            author='Nico'
+            authorAvatarUrl='https://github.com/apple.png'
+            category='Productivity'
+            postedAt='12 hours ago'
           />
         ))}
       </div>
       <div className='grid grid-cols-3 gap-4'>
         <div>
-          <h2 className='text-5xl font-bold leading-tight tracking-tight'>Latest Discussions</h2>
-          <p className='text-xl font-light text-foreground'>Find Ideas for your next project.</p>
+          <h2 className='text-5xl font-bold leading-tight tracking-tight'>IdeasGPT</h2>
+          <p className='text-xl font-light text-foreground'>Find ideas for your next project.</p>
           <Button variant='link' asChild className='text-lg p-0'>
-            <Link to='/ideas/leaderboard'>Explore all ideas &rarr;</Link>
+            <Link to='/ideas'>Explore all ideas &rarr;</Link>
           </Button>
         </div>
-        {Array.from({ length: 11 }).map((_, index) => (
+        {Array.from({ length: 5 }).map((_, index) => (
           <IdeaCard
-            key={index}
-            id='ideaId'
-            title="A startup that helps you find ideas for your next project with AI , helping
-                entrepreneurs and developers brainstorm innovative solutions and validate market
-                opportunities quickly and efficiently. Our AI-powered platform analyzes market
-                trends, user needs, and emerging technologies to suggest viable business concepts
-                and project ideas tailored to your interests and expertise. Whether you're looking
-                to build a SaaS product, mobile app, or physical product, we can help you find your
-                next big idea"
-            viewCount={123}
-            createdAt='12 hours ago'
-            likeCount={12}
-            claimed={true}
+            key={`ideaId-${index}`}
+            id={`ideaId-${index}`}
+            title='A startup that creates an AI-powered generated personal trainer, delivering customized fitness recommendations and tracking of progress using a mobile app to track workouts and progress as well as a website to manage the business.'
+            viewsCount={123}
+            postedAt='12 hours ago'
+            likesCount={12}
+            claimed={index % 2 === 0}
           />
         ))}
       </div>
       <div className='grid grid-cols-4 gap-4'>
         <div>
-          <h2 className='text-5xl font-bold leading-tight tracking-tight'>Latest Discussions</h2>
+          <h2 className='text-5xl font-bold leading-tight tracking-tight'>Latest Jobs</h2>
           <p className='text-xl font-light text-foreground'>Find your dream job.</p>
           <Button variant='link' asChild className='text-lg p-0'>
             <Link to='/jobs'>Explore all jobs &rarr;</Link>
@@ -100,37 +87,37 @@ export default function HomePage({ loaderData, actionData }: Route.ComponentProp
         </div>
         {Array.from({ length: 11 }).map((_, index) => (
           <JobCard
-            key={index}
-            id='jobsId'
-            companyName='Bitcoin'
-            companyLogoUrl='https://github.com/bitcoin.png'
-            postedAt='12 hours ago'
+            key={`jobId-${index}`}
+            id={`jobId-${index}`}
+            company='Tesla'
+            companyLogoUrl='https://github.com/facebook.png'
+            companyHq='San Francisco, CA'
             title='Software Engineer'
-            employmentType='Full-time'
-            locationType='Remote'
-            salaryRange='$100,000 - $120,000'
-            applicantCount={12}
+            postedAt='12 hours ago'
+            type='Full-time'
+            positionLocation='Remote'
+            salary='$100,000 - $120,000'
           />
         ))}
       </div>
       <div className='grid grid-cols-4 gap-4'>
         <div>
           <h2 className='text-5xl font-bold leading-tight tracking-tight'>Find a team mate</h2>
-          <p className='text-xl font-light text-foreground'>Join a team looking for a team mate.</p>
+          <p className='text-xl font-light text-foreground'>
+            Join a team looking for a new member.
+          </p>
           <Button variant='link' asChild className='text-lg p-0'>
             <Link to='/teams'>Explore all teams &rarr;</Link>
           </Button>
         </div>
-        {Array.from({ length: 11 }).map((_, index) => (
+        {Array.from({ length: 7 }).map((_, index) => (
           <TeamCard
-            key={index}
-            id='teamId'
-            username='lynn'
-            avatarUrl='https://github.com/inthetiger.png'
-            roles={['React Developer', 'PM']}
-            location='🇺🇸'
-            projectType='SaaS'
-            projectDescription='a SaaS product'
+            key={`teamId-${index}`}
+            id={`teamId-${index}`}
+            leaderUsername='lynn'
+            leaderAvatarUrl='https://github.com/inthetiger.png'
+            positions={['React Developer', 'Backend Developer', 'Product Manager']}
+            projectDescription='a new social media platform'
           />
         ))}
       </div>

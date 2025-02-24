@@ -1,22 +1,25 @@
 import type { InputHTMLAttributes } from 'react'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
+import { Textarea } from './ui/textarea'
 
 export default function InputPair({
   label,
   description,
+  textArea = false,
   ...rest
 }: {
   label: string
   description: string
-} & InputHTMLAttributes<HTMLInputElement>) {
+  textArea?: boolean
+} & InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>) {
   return (
     <div className='space-y-2 flex flex-col'>
-      <Label htmlFor={rest.id} className='flex flex-col'>
+      <Label htmlFor={rest.id} className='flex flex-col gap-1'>
         {label}
-        <small className='text-muted-foreground'>This is the name of your product</small>
+        <small className='text-muted-foreground'>{description}</small>
       </Label>
-      <Input {...rest} />
+      {textArea ? <Textarea rows={4} className='resize-none' {...rest} /> : <Input {...rest} />}
     </div>
   )
 }

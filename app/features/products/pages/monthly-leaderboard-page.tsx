@@ -1,112 +1,141 @@
 import { DateTime } from 'luxon'
-import { data, Link } from 'react-router'
+import { data, isRouteErrorResponse, Link } from 'react-router'
 import { z } from 'zod'
 import { Hero } from '~/common/components/hero'
+import ProductPagination from '~/common/components/product-pagination'
 import { Button } from '~/common/components/ui/button'
 import { ProductCard } from '../components/product-card'
-import ProductPagination from '../components/product-pagination'
 import type { Route } from './+types/monthly-leaderboard-page'
 
-const paramSchema = z.object({
+const paramsSchema = z.object({
   year: z.coerce.number(),
   month: z.coerce.number(),
 })
 
-export const meta: Route.MetaFunction = () => {
-  return [{ title: 'Weekly Leaderboard | Product Hunt' }]
+export const meta: Route.MetaFunction = ({ params }) => {
+  const date = DateTime.fromObject({
+    year: Number(params.year),
+    month: Number(params.month),
+  })
+    .setZone('Asia/Seoul')
+    .setLocale('ko')
+  return [
+    {
+      title: `Best of ${date.toLocaleString({
+        month: 'long',
+        year: '2-digit',
+      })} | wemake`,
+    },
+  ]
 }
 
 export const loader = ({ params }: Route.LoaderArgs) => {
-  const { success, data: parsedParams } = paramSchema.safeParse(params)
+  const { success, data: parsedData } = paramsSchema.safeParse(params)
   if (!success) {
     throw data(
       {
-        error: 'Invalid date',
-        status: 400,
+        error_code: 'invalid_params',
+        message: 'Invalid params',
       },
-      {
-        status: 400,
-      },
+      { status: 400 },
     )
   }
   const date = DateTime.fromObject({
-    year: parsedParams.year,
-    month: parsedParams.month,
+    year: parsedData.year,
+    month: parsedData.month,
   }).setZone('Asia/Seoul')
   if (!date.isValid) {
     throw data(
       {
-        error: 'Invalid date',
-        status: 400,
+        error_code: 'invalid_date',
+        message: 'Invalid date',
       },
       {
         status: 400,
       },
     )
   }
-  const today = DateTime.now().setZone('Asia/Seoul')
+  const today = DateTime.now().setZone('Asia/Seoul').startOf('month')
   if (date > today) {
     throw data(
       {
-        error: 'Invalid date',
-        status: 400,
+        error_code: 'future_date',
+        message: 'Future date',
       },
-      {
-        status: 400,
-      },
+      { status: 400 },
     )
   }
-
-  return { ...parsedParams }
+  return {
+    ...parsedData,
+  }
 }
 
-export function action({}: Route.ActionArgs) {
-  return {}
-}
-
-export default function MonthlyLeaderboardPage({ loaderData, actionData }: Route.ComponentProps) {
+export default function MonthlyLeaderboardPage({ loaderData }: Route.ComponentProps) {
   const urlDate = DateTime.fromObject({
     year: loaderData.year,
     month: loaderData.month,
   })
-  const previousMonth = urlDate.minus({ month: 1 })
-  const nextMonth = urlDate.plus({ month: 1 })
-  const todayMonth = urlDate.equals(DateTime.now().startOf('month'))
-
+  const previousMonth = urlDate.minus({ months: 1 })
+  const nextMonth = urlDate.plus({ months: 1 })
+  const isToday = urlDate.equals(DateTime.now().startOf('month'))
   return (
-    <div>
+    <div className='space-y-10'>
       <Hero
-        title={`The best products of ${urlDate.toLocaleString({ year: '2-digit', month: 'long' })}`}
-        description='The best products for your home.'
+        title={`Best of ${urlDate.toLocaleString({
+          month: 'long',
+          year: '2-digit',
+        })}`}
       />
-      <div className='flex items-center gap-4 justify-center pb-4'>
+      <div className='flex items-center justify-center gap-2'>
         <Button variant='secondary' asChild>
           <Link to={`/products/leaderboards/monthly/${previousMonth.year}/${previousMonth.month}`}>
-            &larr; {previousMonth.startOf('month').toLocaleString(DateTime.DATE_MED)}
+            &larr;{' '}
+            {previousMonth.toLocaleString({
+              month: 'long',
+              year: '2-digit',
+            })}
           </Link>
         </Button>
-        {DateTime.now().startOf('month') >= nextMonth.startOf('month') ? (
+        {!isToday ? (
           <Button variant='secondary' asChild>
             <Link to={`/products/leaderboards/monthly/${nextMonth.year}/${nextMonth.month}`}>
-              {nextMonth.startOf('month').toLocaleString(DateTime.DATE_MED)} &rarr;
+              {nextMonth.toLocaleString({
+                month: 'long',
+                year: '2-digit',
+              })}{' '}
+              &rarr;
             </Link>
           </Button>
         ) : null}
       </div>
       <div className='space-y-5 w-full max-w-screen-md mx-auto'>
-        {Array.from({ length: 10 }).map((_, index) => (
+        {Array.from({ length: 11 }).map((_, index) => (
           <ProductCard
-            key={index}
+            key={`productId-${index}`}
             id={`productId-${index}`}
-            name={`Product ${index}`}
-            description={`Description ${index}`}
-            commentCount={index}
-            upvoteCount={index}
-            viewCount={index}
+            name='Product Name'
+            description='Product Description'
+            commentsCount={12}
+            viewsCount={12}
+            votesCount={120}
           />
         ))}
       </div>
       <ProductPagination totalPages={10} />
     </div>
   )
+}
+
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div>
+        {error.data.message} / {error.data.error_code}
+      </div>
+    )
+  }
+  if (error instanceof Error) {
+    return <div>{error.message}</div>
+  }
+  return <div>Unknown error</div>
 }
